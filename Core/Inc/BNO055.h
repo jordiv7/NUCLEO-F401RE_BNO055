@@ -128,11 +128,25 @@ typedef struct
     // I2C handle
 	I2C_HandleTypeDef *i2cHandle;
 
+	uint8_t ADDRESS;
+
+	int GYRO_X;
+	int GYRO_Y;
+	int GYRO_Z;
+
+	int ACC_X;
+	int ACC_Y;
+	int ACC_Z;
+
+	int MAG_X;
+	int MAG_Y;
+	int MAG_Z;
+
 }BNO055;
 
 // Initializer
 // Returns 0 if no errors
-uint8_t BNO055_Init(BNO055 *dev, I2C_HandleTypeDef *i2cHandle);
+uint8_t BNO055_Init(BNO055 *dev, uint8_t ADR_PIN, I2C_HandleTypeDef *i2cHandle);
 
 // Read register
 HAL_StatusTypeDef BNO055_readRegister(BNO055 *dev, uint8_t reg, uint8_t *data);
@@ -145,5 +159,8 @@ HAL_StatusTypeDef BNO055_writeRegister(BNO055 *dev, uint8_t reg, uint8_t *data);
 
 // Write registers
 HAL_StatusTypeDef BNO055_writeRegisters(BNO055 *dev, uint8_t reg, uint8_t *data, uint8_t size);
+
+// Read Magnetic field strength
+HAL_StatusTypeDef BNO055_readMAG(BNO055 *dev);
 
 #endif /* INC_BNO055_H_ */
