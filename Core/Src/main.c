@@ -108,6 +108,11 @@ int main(void)
 	BNO055_readMAG(&BNO1);
 	HAL_Delay(5);
 	BNO055_readEUL(&BNO1);
+
+	sprintf((char*)buffer, "Heading: %.02f\r\n", BNO1.EUL_HEADING);
+
+	  HAL_UART_Transmit(&huart2, buffer, strlen((char*)buffer), 5000);
+	  HAL_Delay(2);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
