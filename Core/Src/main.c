@@ -21,7 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "BNO055.h"
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -39,7 +40,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
- I2C_HandleTypeDef hi2c1;
+I2C_HandleTypeDef hi2c1;
 
 UART_HandleTypeDef huart2;
 
@@ -58,7 +59,7 @@ static void MX_I2C1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+BNO055 BNO1;
 /* USER CODE END 0 */
 
 /**
@@ -68,7 +69,7 @@ static void MX_I2C1_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	char buffer[100];
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -92,7 +93,10 @@ int main(void)
   MX_USART2_UART_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-
+//  if(BNO055_Init(&BNO1, 0, &hi2c1) == 255)
+//	  return 255;
+  BNO055_Init(&BNO1, 0, &hi2c1);
+  BNO055_readMAG(&BNO1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -100,7 +104,10 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+	HAL_Delay(5);
+	BNO055_readMAG(&BNO1);
+	HAL_Delay(5);
+	BNO055_readEUL(&BNO1);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

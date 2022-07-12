@@ -1,0 +1,6 @@
+../Core/Src/BNO055.c:10:9:BNO055_Init	32	static
+../Core/Src/BNO055.c:52:19:BNO055_readRegister	40	static
+../Core/Src/BNO055.c:56:19:BNO055_readRegisters	48	static
+../Core/Src/BNO055.c:61:19:BNO055_writeRegister	40	static
+../Core/Src/BNO055.c:66:19:BNO055_writeRegisters	48	static
+../Core/Src/BNO055.c:71:19:BNO055_readMAG	24	static
