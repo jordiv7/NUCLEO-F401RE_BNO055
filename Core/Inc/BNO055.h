@@ -142,6 +142,8 @@ typedef struct
     float MAG_Y;
     float MAG_Z;
 
+    float MAG_DECL;
+
     int LIA_X;
     int LIA_Y;
     int LIA_Z;
