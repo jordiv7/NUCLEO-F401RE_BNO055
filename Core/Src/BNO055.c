@@ -43,6 +43,15 @@ uint8_t BNO055_Init(BNO055 *dev, uint8_t ADR_PIN, I2C_HandleTypeDef *i2cHandle)
     status = BNO055_readRegister(dev, BNO055_REG_CALIB_STAT, &regData);
     errNum += (status != HAL_OK);
 
+    // Check if IMU is fully calibrated
+    //while(regData != 0xFF)
+    //{
+    //	// delay for 50ms then try again
+    // 	  HAL_Delay(50);
+    //    status = BNO055_readRegister(dev, BNO055_REG_CALIB_STAT, &regData);
+    //    errNum += (status != HAL_OK);
+    //}
+
     // Set IMU mode Page 21 Table 3-5
     // Set to NDOF
     regData = (regData & ~0b00001111) | 0b1100;
@@ -77,6 +86,12 @@ uint8_t BNO055_Init(BNO055 *dev, uint8_t ADR_PIN, I2C_HandleTypeDef *i2cHandle)
     dev->MAG_X = 0.0f;
     dev->MAG_Y = 0.0f;
     dev->MAG_Z = 0.0f;
+
+    // Magnetic declination from magnetic-declination.com
+    // East is positive (+), west is negative (-)
+    // mag_decl = (+/-)(deg + min/60 + sec/3600)
+    // Set to 0 to get magnetic heading instead of geo heading
+    dev->MAG_DECL = 11.52;
 
     int8_t dataBuf[2];
     status = BNO055_readRegisters(dev, BNO055_REG_MAG_DATA_X_LSB, dataBuf, 2);
@@ -194,6 +209,13 @@ HAL_StatusTypeDef BNO055_readEUL(BNO055 *dev)
 	BNO055_readRegister(dev, BNO055_REG_EUL_DATA_HEADING_LSB, &data[0]);
 	BNO055_readRegister(dev, BNO055_REG_EUL_DATA_HEADING_MSB, &data[1]);
 	dev->EUL_HEADING = (((int16_t)data[1] << 8) | data[0])/16.0;
+	dev->EUL_HEADING += dev->MAG_DECL;
+	// If the heading is greater than 360 subtract
+	if(dev->EUL_HEADING > 360)
+		dev->EUL_HEADING -= 360;
+	// If the heading is less than 360 add
+	else if(dev->EUL_HEADING < 0)
+		dev->EUL_HEADING += 360;
 
 	BNO055_readRegister(dev, BNO055_REG_EUL_DATA_ROLL_LSB, &data[0]);
 	BNO055_readRegister(dev, BNO055_REG_EUL_DATA_ROLL_MSB, &data[1]);
